@@ -1,0 +1,38 @@
+.CodeEditor {
+    height: 1000px;
+    height: 600px;
+    border: 1px solid #ccc;
+    margin: 100px;
+
+    .container {
+        height: 100%;
+        height: 100%;
+        position: relative;
+    }
+
+    :global {
+        .line {
+            height: calc(1em + 5px);
+            line-height: calc(1em + 5px);
+
+            &.current {
+                background-color: #00000008;
+            }
+        }
+    }
+
+    .codeInput {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        outline: none;
+    }
+
+    .codeStyleContainer {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+    }
+
+
+}
