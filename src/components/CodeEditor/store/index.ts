@@ -7,4 +7,5 @@ export const Store: StoreType = {
   },
   inputDom: null,
   codeDom: null,
+  lineTotal: 1,
 };

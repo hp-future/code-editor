@@ -1,16 +1,22 @@
+import { Store } from './../store/index';
 import { useEffect } from 'react';
+
 /**
  * 自定义 hook，观察行变化
- * @param target
  */
-function useObserveLine(target: HTMLDivElement | null) {
+function useObserveLine() {
   useEffect(() => {
+    const target = document.getElementById('codeInput');
+
     if (!target) return;
 
     const mutationObserver = new MutationObserver(() => {
-      console.log(target);
+      // 更新总行数
+      Store.lineTotal = target.children.length;
+      // todo
     });
-    mutationObserver.observe(target, { childList: true, subtree: true });
+    mutationObserver.observe(target, { childList: true });
+
     return () => {
       mutationObserver.disconnect();
     };

@@ -3,6 +3,7 @@
     height: 600px;
     border: 1px solid #ccc;
     margin: 100px;
+    position: relative;
 
     .container {
         height: 100%;
@@ -15,6 +16,10 @@
             height: calc(1em + 5px);
             line-height: calc(1em + 5px);
 
+            br {
+                display: none;
+            }
+
             &.current {
                 background-color: #00000008;
             }
@@ -26,12 +31,56 @@
         width: 100%;
         height: 100%;
         outline: none;
+
+        :global {
+            .line {
+                color: transparent;
+                caret-color: #333;
+            }
+        }
     }
 
     .codeStyleContainer {
         position: absolute;
         width: 100%;
         height: 100%;
+
+        :global {
+            .line {
+
+                span[role="const"],
+                span[role="function"] {
+                    color: #36a006;
+                }
+
+                span[role="operate"] {
+                    color: red;
+                }
+
+                span[role="result"] {
+                    color: #00178D;
+                }
+
+                span[role="notes"] {
+                    color: #999;
+                }
+
+                span[role="calParam"] {
+                    color: #ad6800;
+                }
+
+                span[role="api"] {
+                    color: #2469FF;
+                }
+            }
+        }
+    }
+
+    .overlays {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 0;
     }
 
 

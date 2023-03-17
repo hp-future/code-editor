@@ -1,6 +1,7 @@
 import React from 'react';
 import { Store } from '../store';
 import * as domFunctions from '../utils/domFunctions';
+import { parseHtml } from '../utils/parseHtml';
 import { highlightCurrentLine } from '../utils/utils';
 
 /**
@@ -11,7 +12,10 @@ export function beforeInputEvent(e: React.FormEvent) {}
 /**
  * 输入框输入事件
  */
-export function inputEvent(e: React.FormEvent) {}
+export function inputEvent(e: React.FormEvent) {
+  const target = e.target as HTMLDivElement;
+  parseHtml(target.innerText);
+}
 
 /**
  * 输入框点击事件
@@ -35,7 +39,6 @@ export function keyDownEvent(e: React.KeyboardEvent) {
       setTimeout(() => highlightCurrentLine(), 0);
       break;
     case 'Backspace':
-      // Store.current.target?.querySelector('br')?.remove();
       const innerText = Store.current.target?.innerText || '';
 
       if (innerText.length === 0) {

@@ -33,13 +33,14 @@ const CodeEditor = (props: IProps) => {
   }, [props.fontSize, props.fontWeight]);
 
   // 观察行变化
-  useObserveLine(codeInputRef.current);
+  useObserveLine();
 
   return (
     <div className={styles.CodeEditor}>
       <div className={styles.container} style={containerStyle}>
         <div className={styles.codeStyleContainer} ref={codeStyleRef} />
         <div
+          id="codeInput"
           className={styles.codeInput}
           ref={codeInputRef}
           contentEditable
@@ -49,6 +50,7 @@ const CodeEditor = (props: IProps) => {
           onKeyDown={keyDownEvent}
         />
       </div>
+      <div className={styles.overlays}></div>
     </div>
   );
 };

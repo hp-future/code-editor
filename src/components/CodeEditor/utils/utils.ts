@@ -8,7 +8,6 @@ export function highlightCurrentLine() {
   const currentLine = Store.inputDom?.children[Store.current.lineNo];
   Store.current.target = currentLine as HTMLDivElement | null;
 
-  currentLine?.querySelector('br')?.remove();
   currentLine?.classList.add('current');
   domFunctions.getSibling(currentLine).forEach((item) => item.classList.remove('current'));
 }
