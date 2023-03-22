@@ -1,5 +1,12 @@
 import styles from './styles/index.module.scss';
-import { beforeInputEvent, inputEvent, clickEvent, keyDownEvent, selectEvent } from './events/code-input';
+import {
+  beforeInputEvent,
+  inputEvent,
+  clickEvent,
+  keyDownEvent,
+  selectEvent,
+  pasteCaptureEvent,
+} from './events/code-input';
 import { CSSProperties, useEffect, useRef, useState } from 'react';
 import { createLine } from './methods/line';
 import useObserveLine from './hooks/observeLine';
@@ -57,6 +64,7 @@ const CodeEditor = (props: IProps) => {
           onClick={clickEvent}
           onKeyDown={keyDownEvent}
           onSelect={selectEvent}
+          onPasteCapture={pasteCaptureEvent}
         />
       </div>
       <div className={styles.overlays} ref={overlaysRef}></div>

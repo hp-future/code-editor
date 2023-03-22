@@ -14,6 +14,16 @@ export interface StoreType {
     lineNo: number;
     target: HTMLDivElement | null | undefined;
   };
+  // 光标信息
+  cursor: {
+    startLine: HTMLElement | null | undefined;
+    startLineNo: number;
+    endLine: HTMLElement | null | undefined;
+    endLineNo: number;
+    startOffset: number;
+    endOffset: number;
+    collapsed: boolean;
+  };
   // 输入框
   inputDom: HTMLDivElement | null;
   // 代码展示样式

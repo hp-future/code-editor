@@ -8,6 +8,7 @@ import { TokenType, parseRules } from './config';
  */
 export function parseHtml(text: string) {
   let html = '';
+console.log(text);
 
   const lines = text.split('\n');
 

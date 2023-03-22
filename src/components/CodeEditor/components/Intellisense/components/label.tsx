@@ -12,5 +12,5 @@ export function Label({ code }: any) {
       );
     }
   }, []);
-  return <span ref={spanRef} className={styles.code} />;
+  return <span tabIndex={-1} ref={spanRef} className={styles.code} />;
 }

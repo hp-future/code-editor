@@ -1,13 +1,28 @@
+import { editHistory } from './../history/index';
 import React from 'react';
 import { Store } from '../store';
 import * as domFunctions from '../utils/domFunctions';
 import { parseHtml } from '../utils/parseHtml';
-import { hiddenIntellisense, highlightCurrentLine, showIntellisense } from '../utils/utils';
+import { highlightCurrentLine, showIntellisenseByKeyword } from '../utils/utils';
+import { insertTextByRange, setCursorInfo } from '../utils/range';
 
 /**
  * 输入框输入前事件
  */
-export function beforeInputEvent(e: React.FormEvent) {}
+export function beforeInputEvent(e: any) {
+  if (e.data === '\n') {
+    return;
+  }
+  setTimeout(() => {
+    editHistory.addhistory({
+      lineNo: Store.cursor.startLineNo,
+      startOffset: Store.cursor.startOffset,
+      endOffset: Store.cursor.endOffset,
+      value: Store.inputDom!.innerText,
+    });
+  }, 100);
+  setTimeout(showIntellisenseByKeyword, 0);
+}
 
 /**
  * 输入框输入事件
@@ -53,6 +68,8 @@ export function keyDownEvent(e: React.KeyboardEvent) {
         setTimeout(() => highlightCurrentLine(), 0);
       }
 
+      setTimeout(showIntellisenseByKeyword, 0);
+
       break;
     case 'ArrowUp':
       if (Store.intellisenseVisible) {
@@ -64,6 +81,16 @@ export function keyDownEvent(e: React.KeyboardEvent) {
         return e.preventDefault();
       }
       break;
+    case 'z':
+      if (e.ctrlKey) {
+        editHistory.undo();
+      }
+      return e.preventDefault();
+    case 'y':
+      if (e.ctrlKey) {
+        editHistory.redo();
+      }
+      return e.preventDefault();
     default:
       break;
   }
@@ -73,48 +100,23 @@ export function keyDownEvent(e: React.KeyboardEvent) {
  * 光标事件
  */
 export function selectEvent() {
-  highlightCurrentLine();
-  showIntellisenseByKeyword();
-}
-
-/**
- * 根据输入关键字显示智能提示框
- * @param range   光标对象
- */
-function showIntellisenseByKeyword() {
-  const selection = window.getSelection();
-  const range = selection!.getRangeAt(0);
-  if (!range.cloneRange) {
-    Store.inputKeyword = '';
-    hiddenIntellisense();
+  const selection = window.getSelection()!;
+  if (selection.rangeCount === 0) {
     return;
   }
+  const range = selection.getRangeAt(0);
+  setCursorInfo(range);
 
-  // 截取输入关键字
-  const { startOffset } = range;
-  const text = Store.current.target!.innerText?.substring(0, startOffset);
-  const matchs = text.match(/(?<=^|[\s,.;(){}\[\]])[a-zA-Z_][a-zA-Z0-9_]*$/);
-  const inputKeyword = matchs ? matchs[0] : '';
-  Store.inputKeyword = inputKeyword;
-
-  if (inputKeyword) {
-    const position = getRangePx(range);
-    if (position.left > 0) {
-      showIntellisense({ position });
-    }
-  } else {
-    hiddenIntellisense();
-  }
+  highlightCurrentLine();
 }
 
 /**
- * 获取光标位置
+ * 粘贴事件
  */
-function getRangePx(range: Range) {
-  const rangeRect = range!.getBoundingClientRect();
-  const outboxRect = Store.outboxDom!.getBoundingClientRect();
-  const left = rangeRect.left - outboxRect.left;
-  const top = rangeRect.top - outboxRect.top;
+export async function pasteCaptureEvent(e: React.ClipboardEvent) {
+  e.preventDefault();
 
-  return { left, top };
+  const text = await navigator.clipboard.readText();
+
+  insertTextByRange(text.replaceAll('\r', ''));
 }
