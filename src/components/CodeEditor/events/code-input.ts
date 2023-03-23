@@ -3,8 +3,14 @@ import React from 'react';
 import { Store } from '../store';
 import * as domFunctions from '../utils/domFunctions';
 import { parseHtml } from '../utils/parseHtml';
-import { highlightCurrentLine, showIntellisenseByKeyword } from '../utils/utils';
+import {
+  highlightCurrentLine,
+  showIntellisenseByKeyword,
+  queryLineByMouseMove,
+  hiddenIntellisense,
+} from '../utils/utils';
 import { insertTextByRange, setCursorInfo } from '../utils/range';
+import { getContentWithTag } from '../expose';
 
 /**
  * 输入框输入前事件
@@ -42,6 +48,7 @@ export function clickEvent(e: React.MouseEvent) {
   const currentLine = isCurrent ? target : target.lastElementChild;
   Store.current.lineNo = domFunctions.getPrevSibling(currentLine).length;
   highlightCurrentLine();
+  hiddenIntellisense();
 }
 
 /**
@@ -119,4 +126,11 @@ export async function pasteCaptureEvent(e: React.ClipboardEvent) {
   const text = await navigator.clipboard.readText();
 
   insertTextByRange(text.replaceAll('\r', ''));
+}
+
+/**
+ * 鼠标移动事件
+ */
+export function mouseMoveEvent(e: React.MouseEvent) {
+  queryLineByMouseMove(e);
 }

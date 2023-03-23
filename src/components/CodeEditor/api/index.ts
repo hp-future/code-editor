@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { Store } from '../store';
 
-const funcType: Record<string, string> = {
+export const funcType: Record<string, string> = {
   CommonFunctions: '常用函数',
   DayAndTimeFunctions: '时间函数',
   TextFunctions: '文本函数',

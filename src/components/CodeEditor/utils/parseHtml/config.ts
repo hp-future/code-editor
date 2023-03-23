@@ -16,13 +16,12 @@ export enum TokenType {
   const = 'const',
   // 普通字符串
   text = 'text',
+  // 关键字
+  keyword = 'keyword',
+  // 标点符号
+  punctuation = 'punctuation',
+  // 边界符
+  boundary = 'boundary',
+  // 数字
+  number = 'number',
 }
-
-export const parseRules = {
-  // 运算符
-  operateRule: { pattern: /\+|\-|\*|\/|=|==|!=|>|>=|<|<=/, type: TokenType.operator },
-  // // 关键字
-  // keywordRule: { pattern: /如果|否则|则|并且|或者/, type: TokenType.keyword },
-  // // 标点符号
-  // punctuationRule: { pattern: /\;|\{|\}|\(|\)|\[|\]|\,|\./, type: TokenType.keyword },
-};

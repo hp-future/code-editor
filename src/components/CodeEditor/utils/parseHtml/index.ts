@@ -1,15 +1,13 @@
+import { getContentWithTag } from '../../expose';
 import { createLine } from '../../methods/line';
 import { Store } from '../../store';
-import { TokenType, parseRules } from './config';
+import { TokenType } from './config';
 
 /**
  * 把输入的文本解析成html标签包裹
  * @param text
  */
 export function parseHtml(text: string) {
-  let html = '';
-console.log(text);
-
   const lines = text.split('\n');
 
   Store.codeDom?.replaceChildren();
@@ -17,6 +15,8 @@ console.log(text);
   lines.forEach((lineText) => {
     Store.codeDom?.appendChild(createLine(getHtmlString(lineText)));
   });
+
+  getContentWithTag();
 }
 
 /**
@@ -25,75 +25,69 @@ console.log(text);
  * @return {String} html标签字符串
  */
 function getHtmlString(text: string) {
-  let html = '';
   const tokens = [];
 
-  let currentOption = 0;
+  let option = 0;
 
-  while (currentOption < text.length) {
-    let char = text[currentOption];
-
-    // 字符串
-    if (char === "'") {
-      let value = char;
-      currentOption++;
-      char = text[currentOption];
-
-      while (char && char !== "'") {
-        value += char;
-        currentOption++;
-        char = text[currentOption];
-      }
-      if (char === "'") {
-        tokens.push({
-          type: TokenType.const,
-          value: value + char,
-        });
-        currentOption++;
-      } else {
-        tokens.push({
-          type: TokenType.text,
-          value: value,
-        });
-      }
-
-      continue;
-    }
-
-    // 数字
-    if (/\d/.test(char)) {
-      let value = '';
-
-      while (char && !/[\s,.(){}\[\];+\-*\/']/.test(char)) {
-        value += char;
-        currentOption++;
-        char = text[currentOption];
-      }
-      if (/^\d+$/.test(value)) {
-        tokens.push({
-          type: TokenType.const,
-          value: value,
-        });
-      } else {
-        tokens.push({
-          type: TokenType.text,
-          value: value,
-        });
-      }
-      continue;
-    }
+  while (option < text.length) {
+    let char = text[option];
 
     // 空格
     if (/\s/.test(char)) {
       let value = '';
-
-      while (char && /\s/.test(char)) {
+      while (/\s/.test(char)) {
         value += '&nbsp;';
-        currentOption++;
-        char = text[currentOption];
+        option++;
+        char = text[option];
       }
       tokens.push({
         type: TokenType.space,
+        value: value,
+      });
+      continue;
+    }
+
+    // 数字
+    if (/[0-9]/.test(char)) {
+      let value = '';
+      while (char && !/[\s;,.(){}[\]+\-*\/>=<!]/.test(char)) {
+        value += char;
+        option++;
+        char = text[option];
+      }
+      if (/^[0-9]+$/.test(value)) {
+        tokens.push({
+          type: TokenType.const,
+          value: value,
+        });
+      } else {
+        tokens.push({
+          type: TokenType.text,
+          value: value,
+        });
+      }
+      continue;
+    }
+
+    // 字符串（半角引号包裹）
+    if (char === "'") {
+      let value = char;
+
+      while (char) {
+        option++;
+        char = text[option];
+        if (char) {
+          value += char;
+          if (char === "'") {
+            option++;
+            break;
+          }
+        } else {
+          break;
+        }
+      }
+      tokens.push({
+        type: TokenType.const,
         value: value,
       });
       continue;
@@ -105,58 +99,19 @@ function getHtmlString(text: string) {
         type: TokenType.operator,
         value: char,
       });
-
-      currentOption++;
+      option++;
       continue;
     }
 
-    // 运算符 = < > >= <= !=
-    if (/=|<|>|!/.test(char)) {
-      let value = char;
-      currentOption++;
-      char = text[currentOption];
-
-      if (char !== '=' && value !== '!') {
-        tokens.push({
-          type: TokenType.operator,
-          value: value,
-        });
-      } else {
-        while (char === '=') {
-          value += char;
-          currentOption++;
-          char = text[currentOption];
-        }
-
-        if (/^(=|<|>|!)=$/.test(value)) {
-          tokens.push({
-            type: TokenType.operator,
-            value: value,
-          });
-        } else {
-          tokens.push({
-            type: TokenType.text,
-            value: value,
-          });
-        }
-      }
-
-      continue;
-    }
-
-    // 关键字 如果
-    if (char === '如') {
-      let value = char;
-      currentOption++;
-      char = text[currentOption];
-
-      while (char && !/\s|\(/.test(char)) {
+    // 运算符 = ==
+    if (char === '=') {
+      let value = '';
+      while (char == '=') {
         value += char;
-        currentOption++;
-        char = text[currentOption];
+        option++;
+        char = text[option];
       }
-
-      if (value === '如果') {
+      if (/^=={0,1}$/.test(value)) {
         tokens.push({
           type: TokenType.operator,
           value: value,
@@ -170,19 +125,15 @@ function getHtmlString(text: string) {
       continue;
     }
 
-    // 关键字 否则
-    if (char === '否') {
-      let value = char;
-      currentOption++;
-      char = text[currentOption];
-
-      while (char && !/\s|\(/.test(char)) {
+    // 运算符 > >= < <=
+    if (/[><]/.test(char)) {
+      let value = '';
+      while (/[><=]/.test(char)) {
         value += char;
-        currentOption++;
-        char = text[currentOption];
+        option++;
+        char = text[option];
       }
-
-      if (value === '否则') {
+      if (/^[><]={0,1}$/.test(value)) {
         tokens.push({
           type: TokenType.operator,
           value: value,
@@ -196,37 +147,15 @@ function getHtmlString(text: string) {
       continue;
     }
 
-    // 关键字 则
-    if (char === '则') {
-      let value = char;
-      currentOption++;
-      char = text[currentOption];
-      if (/\s|\{/.test(char) || !char) {
-        tokens.push({
-          type: TokenType.operator,
-          value: value,
-        });
-      } else {
-        tokens.push({
-          type: TokenType.text,
-          value: value,
-        });
-      }
-    }
-
-    // 关键字 并且
-    if (char === '并') {
-      let value = char;
-      currentOption++;
-      char = text[currentOption];
-
-      while (char && !/\s|\(/.test(char)) {
+    // 运算符 !=
+    if (char === '!') {
+      let value = '';
+      while (char == '=') {
         value += char;
-        currentOption++;
-        char = text[currentOption];
+        option++;
+        char = text[option];
       }
-
-      if (value === '并且') {
+      if (value === '!=') {
         tokens.push({
           type: TokenType.operator,
           value: value,
@@ -240,50 +169,117 @@ function getHtmlString(text: string) {
       continue;
     }
 
-    // 关键字 并且
-    if (char === '或') {
-      let value = char;
-      currentOption++;
-      char = text[currentOption];
-
-      while (char && !/\s|\(/.test(char)) {
-        value += char;
-        currentOption++;
-        char = text[currentOption];
-      }
-
-      if (value === '或者') {
-        tokens.push({
-          type: TokenType.operator,
-          value: value,
-        });
-      } else {
-        tokens.push({
-          type: TokenType.text,
-          value: value,
-        });
-      }
-      continue;
-    }
-
-    // 边界符
-    if (/[,.;(){}\[\]]/.test(char)) {
+    // 边界符 (){}[]
+    if (/[(){}[\]]/.test(char)) {
       tokens.push({
-        type: TokenType.operator,
+        type: TokenType.boundary,
         value: char,
       });
-      currentOption++;
+      option++;
       continue;
     }
 
-    if (char) {
+    // 标点符号
+    if (/[;,.]/.test(char)) {
+      tokens.push({
+        type: TokenType.punctuation,
+        value: char,
+      });
+      option++;
+      continue;
+    }
+
+    // 关键字 如果 否则 则 并且 或者
+    if (/[如否则并或]/.test(char)) {
+      let value = '';
+      while (char && !/[+\-*\/=><!(){}[\];,.\s]/.test(char)) {
+        value += char;
+        option++;
+        char = text[option];
+      }
+      if (/^(如果|否则|则|并且|或者)$/.test(value)) {
+        tokens.push({
+          type: TokenType.keyword,
+          value: value,
+        });
+      } else {
+        tokens.push({
+          type: TokenType.text,
+          value: value,
+        });
+      }
+      continue;
+    }
+
+    // 标识符，全局变量
+    if (/[a-zA-Z_]/.test(char)) {
+      let value = '';
+      while (char && /[a-zA-Z_]/.test(char)) {
+        value += char;
+        option++;
+        char = text[option];
+      }
+      // api
+      if (Store.lexer.apiPattern.test(value)) {
+        tokens.push({
+          type: TokenType.api,
+          value: value,
+        });
+        continue;
+      }
+      // 计算参数
+      if (Store.lexer.calParamPattern.test(value)) {
+        tokens.push({
+          type: TokenType.calParam,
+          value: value,
+        });
+        continue;
+      }
+      // 计算结果
+      if (Store.lexer.resultPattern.test(value)) {
+        tokens.push({
+          type: TokenType.result,
+          value: value,
+        });
+        continue;
+      }
+      // 计算函数
+      if (Store.lexer.functionPattern.test(value)) {
+        tokens.push({
+          type: TokenType.function,
+          value: value,
+        });
+        continue;
+      }
+
       tokens.push({
         type: TokenType.text,
-        value: char,
+        value: value,
       });
+      continue;
     }
-    currentOption++;
+
+    let value = '';
+    // 普通文本
+    while (char) {
+      value += char;
+      option++;
+      char = text[option];
+      if (!char || /[+\-*\/=><!(){}[\];,.\s]/.test(char)) {
+        tokens.push({
+          type: TokenType.text,
+          value: value,
+        });
+        break;
+      }
+    }
+    continue;
   }
 
-  return tokens.map((item) => `<span role="${item.type}">${item.value}</span>`).join('');
+  return tokens
+    .map((item) => {
+      const findVar = Store.lexer.vars.find((el) => el.code === item.value);
+      return `<span class="${item.type}" title="${findVar?.name}">${item.value}</span>`;
+    })
+    .join('');
 }

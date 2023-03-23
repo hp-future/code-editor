@@ -36,7 +36,7 @@ export function insertTextByRange(text: string) {
 
   Store.inputDom!.innerHTML = '';
   wholeText.split('\n').forEach((lineText) => {
-    Store.inputDom?.append(createLine(lineText.replaceAll(/\s/g, '&nbsp;')));
+    Store.inputDom?.append(createLine(lineText.replaceAll(/\s/g, '&nbsp;').replaceAll('<', '&lt;')));
   });
   parseHtml(wholeText);
 

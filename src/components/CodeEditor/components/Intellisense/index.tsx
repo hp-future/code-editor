@@ -38,7 +38,11 @@ const Intellisense = () => {
             key={item.code + '_' + index}
             onClick={() => clickItem(item, index)}
             onDoubleClick={() => {
-              insertTextByRange(item.code);
+              if (item.type === 'function') {
+                insertTextByRange(item.additional!.functionExample);
+              } else {
+                insertTextByRange(item.code);
+              }
               hiddenIntellisense();
             }}
             tabIndex={-1}

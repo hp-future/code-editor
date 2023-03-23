@@ -28,7 +28,13 @@ export const Store: StoreType = {
     keyword: ['如果', '否则', '则'],
     // 全局变量
     vars: [],
+    apiPattern: /^$/,
+    functionPattern: /^$/,
+    calParamPattern: /^$/,
+    resultPattern: /^$/,
   },
   inputKeyword: '',
   intellisenseVisible: false,
+  result: '',
+  lineHeight: 19,
 };

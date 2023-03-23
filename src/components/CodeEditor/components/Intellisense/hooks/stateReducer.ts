@@ -75,7 +75,12 @@ const useStateReducer = (contentRef: RefObject<HTMLDivElement>) => {
   function keydownEvent(e: KeyboardEvent) {
     switch (e.key) {
       case 'Enter':
-        insertTextByRange(reducerState.list[reducerState.currentIndex].code);
+        const listItem = reducerState.list[reducerState.currentIndex];
+        if (listItem.type === 'function') {
+          insertTextByRange(listItem.additional!.functionExample);
+        } else {
+          insertTextByRange(listItem.code);
+        }
 
         hiddenIntellisense();
         e.preventDefault();

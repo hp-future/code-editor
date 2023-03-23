@@ -48,28 +48,31 @@
         :global {
             .line {
 
-                span[role="const"],
-                span[role="function"] {
+                span.const,
+                span.function {
                     color: #36a006;
                 }
 
-                span[role="operate"] {
+                span.operate,
+                span.boundary,
+                span.punctuation,
+                span.keyword {
                     color: red;
                 }
 
-                span[role="result"] {
+                span.result {
                     color: #00178D;
                 }
 
-                span[role="notes"] {
+                span.notes {
                     color: #999;
                 }
 
-                span[role="calParam"] {
+                span.calParam {
                     color: #ad6800;
                 }
 
-                span[role="api"] {
+                span.api {
                     color: #2469FF;
                 }
             }

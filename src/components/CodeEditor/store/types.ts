@@ -1,7 +1,8 @@
 export type GlobalVars = {
-  type: 'operate' | 'keyword' | 'boundary' | 'var' | 'function' | 'calParam' | 'api';
+  type: 'operate' | 'keyword' | 'boundary' | 'var' | 'function' | 'calParam' | 'api' | 'result';
   code: string;
   name: string;
+  desc?: string;
   // 附加参数
   additional?: {
     [x: string]: any;
@@ -44,9 +45,18 @@ export interface StoreType {
     keyword: string[];
     // 全局变量
     vars: GlobalVars[];
+    // 全局变量正则表达式
+    apiPattern: RegExp;
+    functionPattern: RegExp;
+    calParamPattern: RegExp;
+    resultPattern: RegExp;
   };
   // 输入关键字
   inputKeyword: string;
   // 智能提示框显示状态
   intellisenseVisible: boolean;
+  // 计算结果
+  result: string;
+  // 行高
+  lineHeight: number;
 }

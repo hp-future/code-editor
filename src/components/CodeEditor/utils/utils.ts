@@ -5,6 +5,7 @@ import Intellisense from '../components/Intellisense';
 import { ShowIntellisenseProps } from '../types';
 import React from 'react';
 import { getRangePx } from './range';
+import { GlobalVars } from '../store/types';
 
 /**
  * 高亮当前行
@@ -92,5 +93,59 @@ export function showIntellisenseByKeyword() {
     }
   } else {
     hiddenIntellisense();
+  }
+}
+
+/**
+ * 鼠标移动到第几行
+ */
+export function queryLineByMouseMove(e: React.MouseEvent) {
+  // 编辑器相对于窗口位置
+  const posi = Store.outboxDom!.getBoundingClientRect();
+  const editorPosition = {
+    left: posi.left,
+    top: posi.top,
+  };
+
+  // 鼠标相对于编辑器位置
+  const mousePosition = {
+    x: e.clientX - editorPosition.left,
+    y: e.clientY - editorPosition.top,
+  };
+
+  // 第几行
+  let lineNo = Math.floor(mousePosition.y / Store.lineHeight);
+
+  // 超出总行数
+  if (lineNo > Store.lineTotal - 1) {
+    return;
+  }
+  querySpan(lineNo, mousePosition);
+}
+
+/**
+ * 鼠标放在了第几个 span 标签上
+ */
+export function querySpan(lineNo: number, mousePosition: { x: number; y: number }) {
+  const codeLineSpans = Store.codeDom!.children[lineNo].children;
+
+  let i = 0;
+  let width = 0;
+  while (i < codeLineSpans.length) {
+    width += codeLineSpans[i].clientWidth;
+    if (width <= mousePosition.x) {
+      const info = Store.lexer.vars.find((item) => item.code === codeLineSpans[i].textContent);
+      if (info) {
+        showSpanInfo(info);
+      }
+      break;
+    }
+    i++;
+  }
+}
+
+function showSpanInfo(info: GlobalVars) {
+  if (info.type === 'function') {
+  } else {
   }
 }
