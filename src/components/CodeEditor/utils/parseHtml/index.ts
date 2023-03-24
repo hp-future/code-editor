@@ -25,9 +25,17 @@ export function parseHtml(text: string) {
  * @return {String} html标签字符串
  */
 function getHtmlString(text: string) {
+  if (text.length === 0) {
+    return '';
+  }
   const tokens = [];
 
   let option = 0;
+
+  const parentObj = {
+    code: '',
+    type: '' as 'calParam' | 'api',
+  };
 
   while (option < text.length) {
     let char = text[option];
@@ -219,12 +227,26 @@ function getHtmlString(text: string) {
         option++;
         char = text[option];
       }
+      // 如果前面有 .
+      const match = tokens
+        .map((item) => item.value)
+        .join('')
+        .match(/\.\s*$/);
+      if (match) {
+        tokens.push({
+          type: TokenType[parentObj.type],
+          value: value,
+        });
+        continue;
+      }
       // api
       if (Store.lexer.apiPattern.test(value)) {
         tokens.push({
           type: TokenType.api,
           value: value,
         });
+        parentObj.code = value;
+        parentObj.type = 'api';
         continue;
       }
       // 计算参数
@@ -233,6 +255,8 @@ function getHtmlString(text: string) {
           type: TokenType.calParam,
           value: value,
         });
+        parentObj.code = value;
+        parentObj.type = 'calParam';
         continue;
       }
       // 计算结果
@@ -247,6 +271,15 @@ function getHtmlString(text: string) {
       if (Store.lexer.functionPattern.test(value)) {
         tokens.push({
           type: TokenType.function,
+          value: value,
+        });
+        continue;
+      }
+
+      // null undefined
+      if (/^(null|undefined)$/.test(value)) {
+        tokens.push({
+          type: TokenType.const,
           value: value,
         });
         continue;

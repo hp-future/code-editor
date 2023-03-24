@@ -24,6 +24,7 @@ export interface StoreType {
     startOffset: number;
     endOffset: number;
     collapsed: boolean;
+    codeSpan: HTMLSpanElement | null;
   };
   // 输入框
   inputDom: HTMLDivElement | null;

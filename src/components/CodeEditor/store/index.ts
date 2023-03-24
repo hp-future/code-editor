@@ -13,6 +13,7 @@ export const Store: StoreType = {
     startOffset: 0,
     endOffset: 0,
     collapsed: true,
+    codeSpan: null,
   },
   inputDom: null,
   codeDom: null,

@@ -83,6 +83,8 @@ export function setCursorInfo(range: Range) {
     endContainer.nodeName === '#text' ? endContainer.parentElement : (endContainer as HTMLDivElement);
   Store.cursor.endLineNo = domFunctions.getPrevSibling(Store.cursor.endLine).length;
   Store.cursor.collapsed = collapsed;
+
+  getNodeByCursor();
 }
 
 /**
@@ -95,4 +97,34 @@ export function getRangePx(range: Range) {
   const top = rangeRect.top - outboxRect.top;
 
   return { left, top };
+}
+
+/**
+ * 通过光标定位所在节点
+ */
+export function getNodeByCursor() {
+  const { startOffset, startLineNo, collapsed, startLine } = Store.cursor;
+  if (!collapsed || startOffset === 0) {
+    Store.cursor.codeSpan = null;
+    return;
+  }
+
+  const codeLineSpans = Store.codeDom?.children[startLineNo].children || [];
+
+  const leftText = startLine?.innerText.substring(0, startOffset) || '';
+
+  let i = 0;
+  let width = 0;
+  while (i < codeLineSpans.length) {
+    width += (codeLineSpans[i] as HTMLElement).innerText.length;
+
+    if (width >= leftText.length) {
+      Store.cursor.codeSpan = codeLineSpans[i] as HTMLSpanElement;
+      return codeLineSpans[i];
+    }
+    i++;
+  }
+
+  Store.cursor.codeSpan = null;
+  return null;
 }

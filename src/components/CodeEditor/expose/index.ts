@@ -9,7 +9,11 @@ export const insertText = insertTextByRange;
 
 export const getHtml = () => Store.codeDom?.innerHTML;
 
-export const getText = () => Store.inputDom?.innerText;
+export const getText = () => {
+  return Array.from(Store.inputDom?.children || [])
+    .map((line) => (line as HTMLElement).innerText)
+    .join('\n');
+};
 
 export const getContentWithTag = () => {
   const lines = Array.from(Store.codeDom?.children || []);
@@ -49,7 +53,6 @@ export const getContentWithTag = () => {
 
     return lineText;
   });
-  console.log(lineTexts.join('\r\n'));
 
   return lineTexts.join('\r\n');
 };

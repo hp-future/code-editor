@@ -10,7 +10,8 @@ import {
   hiddenIntellisense,
 } from '../utils/utils';
 import { insertTextByRange, setCursorInfo } from '../utils/range';
-import { getContentWithTag } from '../expose';
+import { getContentWithTag, getText } from '../expose';
+import { highlightBracket } from '../utils/highlightBracket';
 
 /**
  * 输入框输入前事件
@@ -34,8 +35,7 @@ export function beforeInputEvent(e: any) {
  * 输入框输入事件
  */
 export function inputEvent(e: React.FormEvent) {
-  const target = e.target as HTMLDivElement;
-  parseHtml(target.innerText);
+  parseHtml(getText());
 }
 
 /**
@@ -115,6 +115,9 @@ export function selectEvent() {
   setCursorInfo(range);
 
   highlightCurrentLine();
+  if (range.collapsed) {
+    highlightBracket();
+  }
 }
 
 /**
