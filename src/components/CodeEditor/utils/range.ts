@@ -1,8 +1,8 @@
-import { editHistory } from '../history';
 import { createLine } from '../methods/line';
 import { Store } from '../store';
 import { parseHtml } from './parseHtml';
 import * as domFunctions from './domFunctions';
+import { editHistory } from '../history';
 
 /**
  * 在光标处插入文本
@@ -15,8 +15,12 @@ export function insertTextByRange(text: string) {
     startOffset -= Store.inputKeyword.length;
   }
 
+  const inputDomText = Array.from(Store.inputDom?.children || [])
+    .map((line) => (line as HTMLElement).innerText)
+    .join('\n');
+
   let wholeText = '';
-  Store.inputDom!.innerText.split('\n').forEach((lineText, index) => {
+  inputDomText.split('\n').forEach((lineText, index) => {
     if (index < startLineNo) {
       wholeText += lineText + '\n';
     } else if (index === startLineNo) {
@@ -36,27 +40,31 @@ export function insertTextByRange(text: string) {
 
   Store.inputDom!.innerHTML = '';
   wholeText.split('\n').forEach((lineText) => {
-    Store.inputDom?.append(createLine(lineText.replaceAll(/\s/g, '&nbsp;').replaceAll('<', '&lt;')));
+    Store.inputDom?.append(createLine(lineText));
   });
   parseHtml(wholeText);
 
   editHistory.addhistory({
-    lineNo: startLineNo,
-    startOffset: startOffset + text.length,
-    endOffset: startOffset + text.length,
-    value: wholeText,
+    lineNo: Store.cursor.startLineNo,
+    startOffset: Store.cursor.startOffset,
+    endOffset: Store.cursor.endOffset,
+    value: Store.inputDom!.innerText || '',
   });
 
   const selection = window.getSelection();
   const range = document.createRange();
   selection?.removeAllRanges();
   const splitTexts = text.split('\n');
+
+  let newLineNo = startLineNo;
   if (splitTexts.length > 1) {
-    const newLineNo = splitTexts.length + startLineNo - 1;
+    newLineNo = splitTexts.length + startLineNo - 1;
+    const newLine = Store.inputDom?.children[newLineNo];
     const lastText = splitTexts.pop();
-    range.setStart(Store.inputDom!.children[newLineNo].firstChild!, lastText?.length || 0);
+    range.setStart(newLine!.firstChild! || newLine, lastText?.length || 0);
   } else {
-    range.setStart(Store.inputDom!.children[startLineNo].firstChild!, startOffset + text.length);
+    const newLine = Store.inputDom?.children[startLineNo];
+    range.setStart(newLine!.firstChild! || newLine, startOffset + text.length);
   }
   selection?.addRange(range);
 }

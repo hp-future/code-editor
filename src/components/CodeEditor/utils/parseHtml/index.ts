@@ -13,9 +13,8 @@ export function parseHtml(text: string) {
   Store.codeDom?.replaceChildren();
 
   lines.forEach((lineText) => {
-    Store.codeDom?.appendChild(createLine(getHtmlString(lineText)));
+    Store.codeDom?.appendChild(createLine(getHtmlString(lineText), true));
   });
-
   getContentWithTag();
 }
 
@@ -157,7 +156,9 @@ function getHtmlString(text: string) {
 
     // 运算符 !=
     if (char === '!') {
-      let value = '';
+      let value = char;
+      option++;
+      char = text[option];
       while (char == '=') {
         value += char;
         option++;

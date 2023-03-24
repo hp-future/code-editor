@@ -17,6 +17,7 @@ import { getVars } from './api';
 import { initVars } from './utils/initVars';
 import { parseHtml } from './utils/parseHtml';
 
+let timeId: NodeJS.Timeout;
 const CodeEditor = (props: IProps) => {
   const codeInputRef = useRef<HTMLDivElement>(null);
   const codeStyleRef = useRef<HTMLDivElement>(null);
@@ -45,7 +46,8 @@ const CodeEditor = (props: IProps) => {
         codeInputRef.current.appendChild(createLine());
         parseHtml(codeInputRef.current.innerText);
       }
-      setTimeout(() => {
+      clearTimeout(timeId);
+      timeId = setTimeout(() => {
         Store.lineHeight = codeInputRef.current?.querySelector('.line')?.clientHeight || 19;
       }, 100);
     }

@@ -6,8 +6,10 @@ import { parseHtml } from '../utils/parseHtml';
 import { highlightCurrentLine, showIntellisenseByKeyword, queryLineByMouseMove } from '../utils/utils';
 import { hiddenIntellisense } from '../utils/showIntellisense';
 import { insertTextByRange, setCursorInfo } from '../utils/range';
-import { getContentWithTag, getText } from '../expose';
+import { getText } from '../expose';
 import { highlightBracket } from '../utils/highlightBracket';
+
+let beforeInputEventTimeId: NodeJS.Timeout;
 
 /**
  * 输入框输入前事件
@@ -16,15 +18,17 @@ export function beforeInputEvent(e: any) {
   if (e.data === '\n') {
     return;
   }
-  setTimeout(() => {
-    editHistory.addhistory({
-      lineNo: Store.cursor.startLineNo,
-      startOffset: Store.cursor.startOffset,
-      endOffset: Store.cursor.endOffset,
-      value: Store.inputDom!.innerText,
-    });
-  }, 100);
-  setTimeout(showIntellisenseByKeyword, 0);
+
+  editHistory.addhistory({
+    lineNo: Store.cursor.startLineNo,
+    startOffset: Store.cursor.startOffset,
+    endOffset: Store.cursor.endOffset,
+    value: Store.inputDom!.innerText || '',
+  });
+  clearTimeout(beforeInputEventTimeId);
+  beforeInputEventTimeId = setTimeout(() => {
+    showIntellisenseByKeyword();
+  }, 0);
 }
 
 /**
@@ -47,6 +51,7 @@ export function clickEvent(e: React.MouseEvent) {
   hiddenIntellisense();
 }
 
+let keyDownEventTimeId: NodeJS.Timeout;
 /**
  * 输入框键盘按键事件
  */
@@ -58,7 +63,10 @@ export function keyDownEvent(e: React.KeyboardEvent) {
       }
 
       Store.current.lineNo++;
-      setTimeout(() => highlightCurrentLine(), 0);
+      clearTimeout(keyDownEventTimeId);
+      keyDownEventTimeId = setTimeout(() => {
+        highlightCurrentLine();
+      }, 0);
       break;
     case 'Backspace':
       const innerText = Store.current.target?.innerText || '';
@@ -68,10 +76,12 @@ export function keyDownEvent(e: React.KeyboardEvent) {
           return e.preventDefault();
         }
         Store.current.lineNo--;
-        setTimeout(() => highlightCurrentLine(), 0);
       }
-
-      setTimeout(showIntellisenseByKeyword, 0);
+      clearTimeout(keyDownEventTimeId);
+      keyDownEventTimeId = setTimeout(() => {
+        highlightCurrentLine();
+        showIntellisenseByKeyword();
+      }, 0);
 
       break;
     case 'ArrowUp':
@@ -87,13 +97,20 @@ export function keyDownEvent(e: React.KeyboardEvent) {
     case 'z':
       if (e.ctrlKey) {
         editHistory.undo();
+        hiddenIntellisense();
         return e.preventDefault();
       }
+      break;
     case 'y':
       if (e.ctrlKey) {
         editHistory.redo();
+        hiddenIntellisense();
         return e.preventDefault();
       }
+      break;
+    case 'Tab':
+      insertTextByRange('  ');
+      return e.preventDefault();
     default:
       break;
   }

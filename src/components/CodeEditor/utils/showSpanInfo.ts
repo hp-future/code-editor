@@ -34,11 +34,11 @@ let SpanInfoRoot: Root;
 function showSpanInfo(node: HTMLElement) {
   const info = Store.lexer.vars.find((item) => item.code === node.innerText);
 
+  hiddenSpanInfo();
+
   if (!info) {
     return;
   }
-
-  hiddenSpanInfo();
 
   const nodePx = node.getBoundingClientRect();
   const outboxRect = Store.outboxDom!.getBoundingClientRect();
