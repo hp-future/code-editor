@@ -2,7 +2,7 @@ import { Store } from '../store';
 import * as domFunctions from '../utils/domFunctions';
 import React from 'react';
 import { getRangePx } from './range';
-import { GlobalVars } from '../store/types';
+import { GlobalVars } from '../types';
 import { querySpan, hiddenSpanInfo } from './showSpanInfo';
 import { showIntellisense, hiddenIntellisense } from './showIntellisense';
 

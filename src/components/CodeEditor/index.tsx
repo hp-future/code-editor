@@ -13,7 +13,6 @@ import { createLine } from './methods/line';
 import useObserveLine from './hooks/observeLine';
 import { IProps } from './types';
 import { Store } from './store';
-import { getVars } from './api';
 import { initVars } from './utils/initVars';
 import { parseHtml } from './utils/parseHtml';
 
@@ -24,14 +23,9 @@ const CodeEditor = (props: IProps) => {
   const overlaysRef = useRef<HTMLDivElement>(null);
   const outboxRef = useRef<HTMLDivElement>(null);
 
-  // 计算结果
   useEffect(() => {
-    initVars({ result: props.result });
-  }, [props.result]);
-  // api列表
-  useEffect(() => {
-    initVars({ apiList: props.apiList });
-  }, [props.apiList]);
+    initVars(props.options.vars);
+  }, [props.options.vars]);
 
   // 初始化
   useEffect(() => {
@@ -51,19 +45,16 @@ const CodeEditor = (props: IProps) => {
         Store.lineHeight = codeInputRef.current?.querySelector('.line')?.clientHeight || 19;
       }, 100);
     }
-
-    // 获取计算参数
-    getVars();
   }, []);
 
   // 代码区域的一些样式
   const [containerStyle, setContainerStyle] = useState<CSSProperties>({});
   useEffect(() => {
     setContainerStyle({
-      fontSize: (props.fontSize || 14) + 'px',
-      fontWeight: props.fontWeight === false ? 'normal' : 'bold',
+      fontSize: (props?.options?.fontSize || 14) + 'px',
+      fontWeight: props?.options?.fontWeight === false ? 'normal' : 'bold',
     });
-  }, [props.fontSize, props.fontWeight]);
+  }, [props?.options?.fontSize, props?.options?.fontWeight]);
 
   // 观察行变化
   useObserveLine();
@@ -92,3 +83,5 @@ const CodeEditor = (props: IProps) => {
 };
 
 export default CodeEditor;
+
+export * from './types';

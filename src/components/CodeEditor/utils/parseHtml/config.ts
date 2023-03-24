@@ -2,18 +2,10 @@
 export enum TokenType {
   // 运算符
   operator = 'operate',
-  // api
-  api = 'api',
-  // 计算结果
-  result = 'result',
-  // 计算函数
-  function = 'function',
-  // 计算参数
-  calParam = 'calParam',
+  // 变量
+  var = 'var',
   // 空格
   space = 'space',
-  // 常量
-  const = 'const',
   // 普通字符串
   text = 'text',
   // 关键字
@@ -24,4 +16,13 @@ export enum TokenType {
   boundary = 'boundary',
   // 数字
   number = 'number',
+  // 字符串（半角引号包裹）
+  string = 'string',
 }
+
+// 边界符
+export const boundary = ['(', ')', '[', ']', '{', '}'];
+// 运算符
+const operate = ['+', '-', '*', '/', '>', '=', '>=', '<', '<=', '==', '!='];
+// 关键字
+const keyword = ['如果', '否则', '则', '并且', '或者', 'null', 'undefined'];

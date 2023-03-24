@@ -1,4 +1,3 @@
-import { getContentWithTag } from '../../expose';
 import { createLine } from '../../methods/line';
 import { Store } from '../../store';
 import { TokenType } from './config';
@@ -15,7 +14,6 @@ export function parseHtml(text: string) {
   lines.forEach((lineText) => {
     Store.codeDom?.appendChild(createLine(getHtmlString(lineText), true));
   });
-  getContentWithTag();
 }
 
 /**
@@ -30,11 +28,6 @@ function getHtmlString(text: string) {
   const tokens = [];
 
   let option = 0;
-
-  const parentObj = {
-    code: '',
-    type: '' as 'calParam' | 'api',
-  };
 
   while (option < text.length) {
     let char = text[option];
@@ -64,7 +57,7 @@ function getHtmlString(text: string) {
       }
       if (/^[0-9]+$/.test(value)) {
         tokens.push({
-          type: TokenType.const,
+          type: TokenType.number,
           value: value,
         });
       } else {
@@ -94,7 +87,7 @@ function getHtmlString(text: string) {
         }
       }
       tokens.push({
-        type: TokenType.const,
+        type: TokenType.string,
         value: value,
       });
       continue;
@@ -228,59 +221,20 @@ function getHtmlString(text: string) {
         option++;
         char = text[option];
       }
-      // 如果前面有 .
-      const match = tokens
-        .map((item) => item.value)
-        .join('')
-        .match(/\.\s*$/);
-      if (match) {
+
+      // 变量
+      if (Store.lexer.varPattern.test(value)) {
         tokens.push({
-          type: TokenType[parentObj.type],
-          value: value,
-        });
-        continue;
-      }
-      // api
-      if (Store.lexer.apiPattern.test(value)) {
-        tokens.push({
-          type: TokenType.api,
-          value: value,
-        });
-        parentObj.code = value;
-        parentObj.type = 'api';
-        continue;
-      }
-      // 计算参数
-      if (Store.lexer.calParamPattern.test(value)) {
-        tokens.push({
-          type: TokenType.calParam,
-          value: value,
-        });
-        parentObj.code = value;
-        parentObj.type = 'calParam';
-        continue;
-      }
-      // 计算结果
-      if (Store.lexer.resultPattern.test(value)) {
-        tokens.push({
-          type: TokenType.result,
-          value: value,
-        });
-        continue;
-      }
-      // 计算函数
-      if (Store.lexer.functionPattern.test(value)) {
-        tokens.push({
-          type: TokenType.function,
+          type: TokenType.var,
           value: value,
         });
         continue;
       }
 
-      // null undefined
+      // 关键字 null undefined
       if (/^(null|undefined)$/.test(value)) {
         tokens.push({
-          type: TokenType.const,
+          type: TokenType.keyword,
           value: value,
         });
         continue;
@@ -310,10 +264,7 @@ function getHtmlString(text: string) {
     continue;
   }
 
-  return tokens
-    .map((item) => {
-      const findVar = Store.lexer.vars.find((el) => el.code === item.value);
-      return `<span class="${item.type}" title="${findVar?.name ?? ''}">${item.value}</span>`;
-    })
-    .join('');
+  console.log(tokens);
+
+  return tokens.map((item) => `<span class="${item.type}">${item.value}</span>`).join('');
 }

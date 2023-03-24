@@ -1,13 +1,4 @@
-export type GlobalVars = {
-  type: 'operate' | 'keyword' | 'boundary' | 'var' | 'function' | 'calParam' | 'api' | 'result';
-  code: string;
-  name: string;
-  desc?: string;
-  // 附加参数
-  additional?: {
-    [x: string]: any;
-  };
-};
+import { GlobalVars } from '../types';
 
 export interface StoreType {
   // 当前行
@@ -38,27 +29,15 @@ export interface StoreType {
   lineTotal: number;
   // 词法分析器相关配置
   lexer: {
-    // 边界符
-    boundary: string[];
-    // 运算符
-    operate: string[];
-    // 关键字
-    keyword: string[];
     // 全局变量
     vars: GlobalVars[];
     varsFilter: GlobalVars[];
-    // 全局变量正则表达式
-    apiPattern: RegExp;
-    functionPattern: RegExp;
-    calParamPattern: RegExp;
-    resultPattern: RegExp;
+    varPattern: RegExp;
   };
   // 输入关键字
   inputKeyword: string;
   // 智能提示框显示状态
   intellisenseVisible: boolean;
-  // 计算结果
-  result: string;
   // 行高
   lineHeight: number;
 }

@@ -1,5 +1,5 @@
 import { useReducer, useEffect, Dispatch, RefObject } from 'react';
-import { GlobalVars } from './../../../store/types';
+import { GlobalVars } from './../../../types';
 import { Store } from '../../../store';
 import { hiddenIntellisense } from '../../../utils/showIntellisense';
 import { insertTextByRange } from '../../../utils/range';

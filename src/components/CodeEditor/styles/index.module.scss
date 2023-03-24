@@ -48,36 +48,36 @@
         :global {
             .line {
 
-                span.const,
-                span.function {
-                    color: #36a006;
+                span.number {
+                    color: #098658;
                 }
 
-                span.is-highlight {
-                    background-color: #cbe2fd;
+                span.operate {
+                    color: #af00db;
                 }
 
-                span.operate,
-                span.boundary,
-                span.punctuation,
+                span.boundary {
+                    color: #795e26;
+                }
+
+                span.punctuation {
+                    color: #001080;
+                }
+
                 span.keyword {
-                    color: red;
+                    color: #af00db;
                 }
 
-                span.result {
-                    color: #00178D;
+                span.var {
+                    color: #0000ff;
                 }
 
                 span.notes {
                     color: #999;
                 }
 
-                span.calParam {
-                    color: #ad6800;
-                }
-
-                span.api {
-                    color: #2469FF;
+                span.is-highlight {
+                    background-color: #cbe2fd;
                 }
             }
         }

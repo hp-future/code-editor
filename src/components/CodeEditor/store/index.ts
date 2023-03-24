@@ -21,22 +21,12 @@ export const Store: StoreType = {
   outboxDom: null,
   lineTotal: 1,
   lexer: {
-    // 边界符
-    boundary: ['(', ')', '[', ']', '{', '}'],
-    // 运算符
-    operate: ['+', '-', '*', '/', '>', '=', '>=', '<', '<=', '==', '!='],
-    // 关键字
-    keyword: ['如果', '否则', '则'],
     // 全局变量
     vars: [],
     varsFilter: [],
-    apiPattern: /^$/,
-    functionPattern: /^$/,
-    calParamPattern: /^$/,
-    resultPattern: /^$/,
+    varPattern: /^$/,
   },
   inputKeyword: '',
   intellisenseVisible: false,
-  result: '',
   lineHeight: 19,
 };

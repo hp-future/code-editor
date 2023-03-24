@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { Store } from '../../store';
-import { GlobalVars } from '../../store/types';
+import { GlobalVars } from '../../types';
 import styles from './style.module.scss';
 import { Label } from './components/label';
 import useStateReducer from './hooks/stateReducer';
@@ -38,11 +38,7 @@ const Intellisense = () => {
             key={item.code + '_' + index}
             onClick={() => clickItem(item, index)}
             onDoubleClick={() => {
-              if (item.type === 'function') {
-                insertTextByRange(item.additional!.functionExample);
-              } else {
-                insertTextByRange(item.code);
-              }
+              insertTextByRange(item.code);
               hiddenIntellisense();
             }}
             tabIndex={-1}
