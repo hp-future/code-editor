@@ -69,7 +69,7 @@ const CodeEditor = (props: IProps) => {
   return (
     <div className={styles.CodeEditor} ref={outboxRef}>
       <div className={styles.container} style={containerStyle}>
-        <div id="codeStyleContainer" className={styles.codeStyleContainer} ref={codeStyleRef} />
+        <div className={styles.codeStyleContainer} ref={codeStyleRef} />
         <div
           id="codeInput"
           className={styles.codeInput}

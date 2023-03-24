@@ -6,7 +6,7 @@ import { useEffect } from 'react';
  */
 function useObserveLine() {
   useEffect(() => {
-    const target = document.getElementById('codeStyleContainer');
+    const target = document.getElementById('codeInput');
 
     if (!target) return;
 

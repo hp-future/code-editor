@@ -1,0 +1,16 @@
+.SpanInfo {
+    min-width: 200px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    padding: 4px 8px;
+
+    .title {
+        font-weight: bold;
+    }
+
+    .desc {
+        margin-top: 10px;
+        color: #999;
+    }
+}

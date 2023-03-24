@@ -6,7 +6,7 @@ import { Label } from './components/label';
 import useStateReducer from './hooks/stateReducer';
 import useScroll from './hooks/useScroll';
 import { insertTextByRange } from '../../utils/range';
-import { hiddenIntellisense } from '../../utils/utils';
+import { hiddenIntellisense } from '../../utils/showIntellisense';
 
 const Intellisense = () => {
   const contentRef = useRef<HTMLDivElement>(null);

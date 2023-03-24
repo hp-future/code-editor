@@ -1,7 +1,7 @@
 import { useReducer, useEffect, Dispatch, RefObject } from 'react';
 import { GlobalVars } from './../../../store/types';
 import { Store } from '../../../store';
-import { hiddenIntellisense } from '../../../utils/utils';
+import { hiddenIntellisense } from '../../../utils/showIntellisense';
 import { insertTextByRange } from '../../../utils/range';
 
 export type StateType = {

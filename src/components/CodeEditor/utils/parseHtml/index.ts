@@ -312,7 +312,7 @@ function getHtmlString(text: string) {
   return tokens
     .map((item) => {
       const findVar = Store.lexer.vars.find((el) => el.code === item.value);
-      return `<span class="${item.type}" title="${findVar?.name}">${item.value}</span>`;
+      return `<span class="${item.type}" title="${findVar?.name ?? ''}">${item.value}</span>`;
     })
     .join('');
 }

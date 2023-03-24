@@ -3,12 +3,8 @@ import React from 'react';
 import { Store } from '../store';
 import * as domFunctions from '../utils/domFunctions';
 import { parseHtml } from '../utils/parseHtml';
-import {
-  highlightCurrentLine,
-  showIntellisenseByKeyword,
-  queryLineByMouseMove,
-  hiddenIntellisense,
-} from '../utils/utils';
+import { highlightCurrentLine, showIntellisenseByKeyword, queryLineByMouseMove } from '../utils/utils';
+import { hiddenIntellisense } from '../utils/showIntellisense';
 import { insertTextByRange, setCursorInfo } from '../utils/range';
 import { getContentWithTag, getText } from '../expose';
 import { highlightBracket } from '../utils/highlightBracket';
@@ -91,13 +87,13 @@ export function keyDownEvent(e: React.KeyboardEvent) {
     case 'z':
       if (e.ctrlKey) {
         editHistory.undo();
+        return e.preventDefault();
       }
-      return e.preventDefault();
     case 'y':
       if (e.ctrlKey) {
         editHistory.redo();
+        return e.preventDefault();
       }
-      return e.preventDefault();
     default:
       break;
   }
