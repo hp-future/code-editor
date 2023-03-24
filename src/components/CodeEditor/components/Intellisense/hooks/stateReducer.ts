@@ -49,11 +49,7 @@ const useStateReducer = (contentRef: RefObject<HTMLDivElement>) => {
   const [reducerState, dispatch] = useReducer(reducer, state);
 
   useEffect(() => {
-    const vars = Store.lexer.vars.filter((item) =>
-      item.code!.toLocaleLowerCase().includes(Store.inputKeyword.toLocaleLowerCase())
-    );
-
-    dispatch({ type: 'setList', list: vars });
+    dispatch({ type: 'setList', list: Store.lexer.varsFilter });
   }, []);
 
   useEffect(() => {

@@ -46,6 +46,7 @@ export interface StoreType {
     keyword: string[];
     // 全局变量
     vars: GlobalVars[];
+    varsFilter: GlobalVars[];
     // 全局变量正则表达式
     apiPattern: RegExp;
     functionPattern: RegExp;

@@ -41,7 +41,7 @@ export async function getCalParamConfigs() {
     if (Array.isArray(item.dataFormList) && item.dataFormList.length > 0) {
       item.dataFormList.forEach((el: any) => {
         list.push({
-          parent: item,
+          parent: { ...item, code: item.calParamCode, name: item.calParamName },
           calParamCode: el.fieldCode,
           calParamName: el.fieldName,
           calParamType: el.calParamType,
@@ -76,6 +76,7 @@ export async function getVars() {
       name: item.calParamName,
       additional: {
         varTypeName: '计算参数',
+        parent: item.parent,
       },
     });
   });

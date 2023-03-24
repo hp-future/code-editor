@@ -222,7 +222,7 @@ function getHtmlString(text: string) {
     // 标识符，全局变量
     if (/[a-zA-Z_]/.test(char)) {
       let value = '';
-      while (char && /[a-zA-Z_]/.test(char)) {
+      while (char && /[a-zA-Z0-9_]/.test(char)) {
         value += char;
         option++;
         char = text[option];

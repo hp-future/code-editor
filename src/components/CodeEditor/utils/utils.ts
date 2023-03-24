@@ -74,18 +74,31 @@ export function showIntellisenseByKeyword() {
   // 截取输入关键字
   const { startOffset } = range;
   const text = Store.current.target!.innerText?.substring(0, startOffset);
-  const matchs = text.match(/(?<=^|[\s,.;(){}\[\]])[a-zA-Z_][a-zA-Z0-9_]*$/);
-  const inputKeyword = matchs ? matchs[0] : '';
-  Store.inputKeyword = inputKeyword;
-
-  if (!inputKeyword) {
-    return hiddenIntellisense();
+  let inputKeyword = '';
+  let vars: GlobalVars[] = [];
+  // 点操作
+  const matchs = text.match(/(?<=^|[\s,;(){}\[\]])[a-zA-Z_]*.\s*.\.\s*[a-zA-Z0-9_]*$/);
+  if (matchs) {
+    const [parentCode, code] = matchs[0].split(/\s*\.\s*/);
+    inputKeyword = code || '';
+    if (parentCode) {
+      vars = Store.lexer.vars.filter(
+        (item) =>
+          item.additional?.parent &&
+          item.code!.toLocaleLowerCase().includes(inputKeyword.toLocaleLowerCase()) &&
+          item.additional?.parent.code === parentCode
+      );
+    }
+  } else {
+    const matchs = text.match(/(?<=^|[\s,.;(){}\[\]])[a-zA-Z_][a-zA-Z0-9_]*$/);
+    inputKeyword = matchs ? matchs[0] : '';
+    if (!inputKeyword) {
+      return hiddenIntellisense();
+    }
+    vars = Store.lexer.vars.filter((item) => item.code!.toLocaleLowerCase().includes(inputKeyword.toLocaleLowerCase()));
   }
-
-  const vars = Store.lexer.vars.filter((item) =>
-    item.code!.toLocaleLowerCase().includes(inputKeyword.toLocaleLowerCase())
-  );
-
+  Store.inputKeyword = inputKeyword;
+  Store.lexer.varsFilter = vars;
   if (vars.length > 0) {
     const position = getRangePx(range);
     if (position.left > 0) {
