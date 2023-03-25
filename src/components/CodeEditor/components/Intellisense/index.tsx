@@ -41,12 +41,11 @@ const Intellisense = () => {
               insertTextByRange(item.code);
               hiddenIntellisense();
             }}
-            tabIndex={-1}
           >
             <Label code={item.code} />
-            <span tabIndex={-1} className={styles.typeName}>
+            {/* <span className={styles.typeName}>
               {item?.additional?.varTypeName}
-            </span>
+            </span> */}
           </div>
         ))}
       </div>

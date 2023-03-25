@@ -29,6 +29,7 @@ export interface StoreType {
   lineTotal: number;
   // 词法分析器相关配置
   lexer: {
+    keyword: string[],
     // 全局变量
     vars: GlobalVars[];
     varsFilter: GlobalVars[];

@@ -21,6 +21,7 @@ export const Store: StoreType = {
   outboxDom: null,
   lineTotal: 1,
   lexer: {
+    keyword: ['如果', '否则', '则', '并且', '或者', 'null', 'undefined'],
     // 全局变量
     vars: [],
     varsFilter: [],

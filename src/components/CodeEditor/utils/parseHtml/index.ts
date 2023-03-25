@@ -264,7 +264,5 @@ function getHtmlString(text: string) {
     continue;
   }
 
-  console.log(tokens);
-
   return tokens.map((item) => `<span class="${item.type}">${item.value}</span>`).join('');
 }
