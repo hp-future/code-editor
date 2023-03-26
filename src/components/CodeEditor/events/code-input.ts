@@ -35,7 +35,7 @@ export function beforeInputEvent(e: any) {
  * 输入框输入事件
  */
 export function inputEvent(e: React.FormEvent) {
-  parseHtml(getText());
+  parseHtml();
 }
 
 /**

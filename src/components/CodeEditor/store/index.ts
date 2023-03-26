@@ -31,3 +31,4 @@ export const Store: StoreType = {
   intellisenseVisible: false,
   lineHeight: 19,
 };
+

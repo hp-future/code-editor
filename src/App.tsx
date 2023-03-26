@@ -1,5 +1,7 @@
-import { useState } from 'react';
 import CodeEditor, { EditorOptionType } from './components/CodeEditor';
+import Sidebar from './components/Sidebar'
+import styles from './App.module.scss'
+import { Layout } from 'antd'
 
 function App() {
   const vars: EditorOptionType['vars'] = [
@@ -32,12 +34,21 @@ function App() {
   ];
 
   return (
-    <div className="App">
-      <CodeEditor
-        options={{
-          vars,
-        }}
-      />
+    <div className={styles.App}>
+      <Layout>
+        <Layout.Sider style={{ backgroundColor: '#fff' }}>
+
+          <Sidebar />
+        </Layout.Sider>
+        <Layout.Content>
+
+          <CodeEditor
+            options={{
+              vars,
+            }}
+          />
+        </Layout.Content>
+      </Layout>
     </div>
   );
 }

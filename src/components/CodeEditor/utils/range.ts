@@ -42,7 +42,7 @@ export function insertTextByRange(text: string) {
   wholeText.split('\n').forEach((lineText) => {
     Store.inputDom?.append(createLine(lineText));
   });
-  parseHtml(wholeText);
+  parseHtml();
 
   editHistory.addhistory({
     lineNo: Store.cursor.startLineNo,

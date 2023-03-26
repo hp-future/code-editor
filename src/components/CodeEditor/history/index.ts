@@ -41,7 +41,7 @@ export const editHistory: HistoryMethodType = {
         Store.inputDom?.append(createLine(lineText));
       });
 
-      parseHtml(lastHistory.value);
+      parseHtml();
       setRange(lastHistory.lineNo, lastHistory.startOffset);
 
       if (redoData.length > 100) {
@@ -60,7 +60,7 @@ export const editHistory: HistoryMethodType = {
         Store.inputDom?.append(createLine(lineText));
       });
 
-      parseHtml(lastHistory.value);
+      parseHtml();
       setRange(lastHistory.lineNo, lastHistory.startOffset);
 
       if (undoData.length > 100) {

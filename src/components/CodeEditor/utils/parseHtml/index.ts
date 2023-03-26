@@ -4,10 +4,9 @@ import { TokenType } from './config';
 
 /**
  * 把输入的文本解析成html标签包裹
- * @param text
  */
-export function parseHtml(text: string) {
-  const lines = text.split('\n');
+export function parseHtml() {
+  const lines = Array.from(Store.inputDom?.children || []).map(line => (line as HTMLDivElement).innerText)
 
   Store.codeDom?.replaceChildren();
 

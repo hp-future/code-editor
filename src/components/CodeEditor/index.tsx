@@ -1,4 +1,4 @@
-import styles from './styles/index.module.scss';
+import styles from "./styles/index.module.scss";
 import {
   beforeInputEvent,
   inputEvent,
@@ -7,14 +7,14 @@ import {
   selectEvent,
   pasteCaptureEvent,
   mouseMoveEvent,
-} from './events/code-input';
-import { CSSProperties, useEffect, useRef, useState } from 'react';
-import { createLine } from './methods/line';
-import useObserveLine from './hooks/observeLine';
-import { IProps } from './types';
-import { Store } from './store';
-import { initVars } from './utils/initVars';
-import { parseHtml } from './utils/parseHtml';
+} from "./events/code-input";
+import { CSSProperties, useEffect, useRef, useState } from "react";
+import { createLine } from "./methods/line";
+import useObserveLine from "./hooks/observeLine";
+import { IProps } from "./types";
+import { Store } from "./store";
+import { initVars } from "./utils/initVars";
+import { parseHtml } from "./utils/parseHtml";
 
 let timeId: NodeJS.Timeout;
 const CodeEditor = (props: IProps) => {
@@ -38,11 +38,12 @@ const CodeEditor = (props: IProps) => {
       // 如果输入框没有子节点，添加一行
       if (codeInputRef.current.children?.length === 0) {
         codeInputRef.current.appendChild(createLine());
-        parseHtml(codeInputRef.current.innerText);
+        parseHtml();
       }
       clearTimeout(timeId);
       timeId = setTimeout(() => {
-        Store.lineHeight = codeInputRef.current?.querySelector('.line')?.clientHeight || 19;
+        Store.lineHeight =
+          codeInputRef.current?.querySelector(".line")?.clientHeight || 19;
       }, 100);
     }
   }, []);
@@ -51,8 +52,8 @@ const CodeEditor = (props: IProps) => {
   const [containerStyle, setContainerStyle] = useState<CSSProperties>({});
   useEffect(() => {
     setContainerStyle({
-      fontSize: (props?.options?.fontSize || 14) + 'px',
-      fontWeight: props?.options?.fontWeight === false ? 'normal' : 'bold',
+      fontSize: (props?.options?.fontSize || 14) + "px",
+      fontWeight: props?.options?.fontWeight === false ? "normal" : "bold",
     });
   }, [props?.options?.fontSize, props?.options?.fontWeight]);
 
@@ -84,4 +85,4 @@ const CodeEditor = (props: IProps) => {
 
 export default CodeEditor;
 
-export * from './types';
+export * from "./types";
