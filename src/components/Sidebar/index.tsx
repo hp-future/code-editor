@@ -10,7 +10,9 @@ const Sidebar = () => {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    setList(Store.lexer.vars.filter((item) => item.name !== "关键字"));
+    setTimeout(() => {
+      setList(Store.lexer.vars.filter((item) => item.name !== "关键字"));
+    }, 0);
   }, []);
 
   function deleteVar(value: GlobalVars, index: number) {

@@ -1,13 +1,14 @@
-import CodeEditor, { EditorOptionType } from './components/CodeEditor';
-import Sidebar from './components/Sidebar'
-import styles from './App.module.scss'
-import { Layout } from 'antd'
+import CodeEditor, { EditorOptionType } from "./components/CodeEditor";
+import Sidebar from "./components/Sidebar";
+import styles from "./App.module.scss";
+import { Layout } from "antd";
+import { useState } from "react";
 
 function App() {
-  const vars: EditorOptionType['vars'] = [
+  const [vars] = useState([
     {
-      code: 'num',
-      name: '数字',
+      code: "num",
+      name: "数字",
     },
     // {
     //   code: 'obj1',
@@ -24,24 +25,22 @@ function App() {
     //   ],
     // },
     {
-      code: 'price',
-      name: '价格',
+      code: "price",
+      name: "价格",
     },
     {
-      code: 'total',
-      name: '总数',
+      code: "total",
+      name: "总数",
     },
-  ];
+  ]);
 
   return (
     <div className={styles.App}>
       <Layout>
-        <Layout.Sider style={{ backgroundColor: '#fff' }}>
-
+        <Layout.Sider style={{ backgroundColor: "#fff" }}>
           <Sidebar />
         </Layout.Sider>
         <Layout.Content>
-
           <CodeEditor
             options={{
               vars,

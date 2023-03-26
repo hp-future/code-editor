@@ -23,7 +23,7 @@ const CodeEditor = (props: IProps) => {
   const overlaysRef = useRef<HTMLDivElement>(null);
   const outboxRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
+  useEffect(() => {    
     initVars(props.options.vars);
   }, [props.options.vars]);
 

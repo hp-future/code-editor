@@ -7,5 +7,7 @@ export async function initVars(vars: GlobalVars[]) {
 
   proxyVars([...keywordVars, ...vars])
 
+  
+
   Store.lexer.varsFilter = [];
 }
