@@ -45,10 +45,6 @@ undefined
 []
 ```
 
-# 全局变量智能提示（如下图）
-
-![](./md_images/智能提示.png)
-
 # 配置选项
 
 ```typescript
