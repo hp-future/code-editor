@@ -23,16 +23,6 @@ export type GlobalVars = {
 
 export interface EditorOptionType {
   /**
-   * 代码字体大小
-   * @default 14
-   */
-  fontSize?: number;
-  /**
-   * 代码加粗
-   * @default true
-   */
-  fontWeight?: boolean;
-  /**
    * 初始化代码
    */
   code?: string;

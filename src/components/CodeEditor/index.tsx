@@ -23,7 +23,7 @@ const CodeEditor = (props: IProps) => {
   const overlaysRef = useRef<HTMLDivElement>(null);
   const outboxRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {    
+  useEffect(() => {
     initVars(props.options.vars);
   }, [props.options.vars]);
 
@@ -35,34 +35,32 @@ const CodeEditor = (props: IProps) => {
       Store.overlaysDom = overlaysRef.current;
       Store.outboxDom = outboxRef.current;
 
+      const lines = props.options.code?.split("\n") || [];
+
       // 如果输入框没有子节点，添加一行
-      if (codeInputRef.current.children?.length === 0) {
-        codeInputRef.current.appendChild(createLine());
-        parseHtml();
+      if (lines.length === 0) {
+        codeInputRef.current.append(createLine());
+      } else {
+        codeInputRef.current.innerHTML = "";
+        lines.forEach((lineText) =>
+          codeInputRef.current?.append(createLine(lineText))
+        );
       }
+      parseHtml();
       clearTimeout(timeId);
       timeId = setTimeout(() => {
         Store.lineHeight =
           codeInputRef.current?.querySelector(".line")?.clientHeight || 19;
       }, 100);
     }
-  }, []);
-
-  // 代码区域的一些样式
-  const [containerStyle, setContainerStyle] = useState<CSSProperties>({});
-  useEffect(() => {
-    setContainerStyle({
-      fontSize: (props?.options?.fontSize || 14) + "px",
-      fontWeight: props?.options?.fontWeight === false ? "normal" : "bold",
-    });
-  }, [props?.options?.fontSize, props?.options?.fontWeight]);
+  }, [props.options.code]);
 
   // 观察行变化
   useObserveLine();
 
   return (
     <div className={styles.CodeEditor} ref={outboxRef}>
-      <div className={styles.container} style={containerStyle}>
+      <div className={styles.container}>
         <div className={styles.codeStyleContainer} ref={codeStyleRef} />
         <div
           id="codeInput"

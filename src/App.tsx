@@ -44,6 +44,7 @@ function App() {
           <CodeEditor
             options={{
               vars,
+              code: 'null'
             }}
           />
         </Layout.Content>
